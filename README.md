@@ -1,87 +1,88 @@
 # CRUD Properties - Real Estate Manager
 
-Este proyecto implementa un sistema **CRUD (Create, Read, Update, Delete)** para gestionar propiedades inmobiliarias.  
-Está desarrollado con **Spring Boot** en el backend y un **frontend ligero en HTML + JavaScript** (embebido en la misma aplicación).  
-La persistencia de datos se maneja con **MySQL Server** desplegado en otra instancia de AWS EC2.
+This project implements a **CRUD (Create, Read, Update, Delete)** system for managing real estate properties.  
+It is developed with **Spring Boot** on the backend and a **lightweight HTML + JavaScript frontend** (embedded in the same application).  
+Data persistence is handled with **MySQL Server** deployed on another AWS EC2 instance.
 
 ---
 
-## 🚀 Arquitectura del Sistema
+## 🚀 System Architecture
 
-La solución está compuesta por tres capas principales:
+The solution consists of three main layers:
 
 1. **Frontend + Backend (Spring Boot)**  
-   - Ambos se encuentran empaquetados en la misma aplicación (`app.jar`).
-   - El backend expone endpoints REST para operaciones CRUD sobre propiedades.
-   - El frontend es un `index.html` (con JavaScript) que consume dichos endpoints vía **Fetch API**.
-   - La aplicación corre en el puerto **8080**.
+   - Both are packaged in the same application (`app.jar`).
+   - The backend exposes REST endpoints for CRUD operations on properties.
+   - The frontend is an `index.html` (with JavaScript) that consumes these endpoints via **Fetch API**.
+   - The application runs on port **8080**.
 
-2. **Base de Datos (MySQL)**  
-   - Desplegada en una **instancia separada de EC2** para mayor modularidad.
-   - Contiene la tabla `properties` con los atributos:
-     - `id` (PK, autoincremental)
+2. **Database (MySQL)**  
+   - Deployed on a **separate EC2 instance** for greater modularity.
+   - Contains the `properties` table with the following attributes:
+     - `id` (PK, auto-increment)
      - `address`
      - `price`
      - `size`
      - `description`
      - `created_at`
      - `updated_at`
-   - La comunicación entre backend y DB se realiza a través del puerto **3306** (MySQL).
+   - Communication between backend and DB is done through port **3306** (MySQL).
 
 3. **AWS Networking & Security**  
-   - **Security Groups** configurados para permitir:
-     - **22 (SSH)** → solo desde la IP del desarrollador.
-     - **3306 (MySQL)** → solo desde la IP privada del backend.
-     - **8080 (App)** → abierto a `0.0.0.0/0` (para acceso desde cualquier navegador).  
-   - La aplicación Spring Boot escucha en `0.0.0.0:8080`, lo que permite acceso externo.
-   - En Ubuntu, se validó que el firewall (`ufw`) permite el puerto 8080.
+   - **Security Groups** configured to allow:
+     - **22 (SSH)** → only from developer's IP.
+     - **3306 (MySQL)** → only from backend's private IP.
+     - **8080 (App)** → open to `0.0.0.0/0` (for access from any browser).  
+   - The Spring Boot application listens on `0.0.0.0:8080`, allowing external access.
+   - On Ubuntu, it was validated that the firewall (`ufw`) allows port 8080.
 
 ---
 
-## Tecnologías Utilizadas
+## Technologies Used
 
 - **Backend:** Java 17 + Spring Boot 3.2.5  
 - **Frontend:** HTML5, JavaScript (Fetch API)  
-- **Base de Datos:** MySQL Server 8.x  
+- **Database:** MySQL Server 8.x  
 - **ORM:** Hibernate + Spring Data JPA  
-- **Infraestructura:** AWS EC2 (Ubuntu Server 22.04)  
-- **Conexión:** HikariCP (pool de conexiones)  
+- **Infrastructure:** AWS EC2 (Ubuntu Server 22.04)  
+- **Connection:** HikariCP (connection pool)  
 
 ---
 
-## Estructura del Proyecto
+## Project Structure
 
 ```plaintext
 
 /src/main/java/eci/edu/co/
-├── App.java # Clase principal Spring Boot
+├── App.java # Main Spring Boot class
 ├── controller/
-│ └── PropertyController.java # Endpoints REST
+│ └── PropertyController.java # REST endpoints
 ├── model/
-│ └── Property.java # Entidad JPA
+│ └── Property.java # JPA entity
 ├── repository/
-│ └── PropertyRepository.java # Repositorio JPA
+│ └── PropertyRepository.java # JPA repository
 └── service/
-└── PropertyService.java # Lógica de negocio
+└── PropertyService.java # Business logic
 
 /src/main/resources/
-├── application.properties # Configuración DB
+├── application.properties # DB configuration
 └── static/
-└── index.html # Frontend HTML + JS
+├── index.html # HTML + JS frontend
+└── styles.css # CSS stylesheet
 
 ```
 
-## Endpoints REST
+## REST Endpoints
 
-- `POST /api/properties` → Crear propiedad  
-- `GET /api/properties` → Listar todas las propiedades  
-- `GET /api/properties/{id}` → Consultar propiedad por ID  
-- `PUT /api/properties/{id}` → Actualizar propiedad  
-- `DELETE /api/properties/{id}` → Eliminar propiedad  
+- `POST /api/properties` → Create property  
+- `GET /api/properties` → List all properties  
+- `GET /api/properties/{id}` → Get property by ID  
+- `PUT /api/properties/{id}` → Update property  
+- `DELETE /api/properties/{id}` → Delete property  
 
-## Configuración de la Base de Datos
+## Database Configuration
 
-En la instancia EC2 de la base de datos se creó la tabla:
+In the database EC2 instance, the following table was created:
 
 ```sql
 CREATE TABLE properties (
@@ -96,39 +97,39 @@ CREATE TABLE properties (
 
 ```
 
-## Despliegue en AWS EC2
+## AWS EC2 Deployment
 
 ### Backend + Frontend
 
-1. Copiar el .jar a la instancia:
+1. Copy the .jar to the instance:
 
     scp -i key.pem app.jar ubuntu@<BACKEND_PUBLIC_IP>:/opt/propertyapp/
 
-2. Ejecutar la app en segundo plano:
+2. Run the app in background:
 
     * cd /opt/propertyapp
     * nohup java -jar app.jar > app.log 2>&1 &
 
-### Base de Datos
+### Database
 
-    * Instalación y configuración de MySQL en otra instancia EC2.
-    * Apertura del puerto 3306 en el Security Group solo para el backend.
+    * MySQL installation and configuration on another EC2 instance.
+    * Opening port 3306 in Security Group only for backend access.
 
 ### Networking
 
-    * Security Group Backend
+    * Backend Security Group
 
-        Puerto 8080 abierto a 0.0.0.0/0.
+        Port 8080 open to 0.0.0.0/0.
 
-    * Security Group Database
+    * Database Security Group
 
-        Puerto 3306 abierto solo para la IP privada del backend.
+        Port 3306 open only to backend's private IP.
 
-    * Security Group General
+    * General Security Group
 
-        Puerto 22 restringido a la IP del desarrollador para SSH.
+        Port 22 restricted to developer's IP for SSH.
 
 
-## Autor
+## Author
 
 Juan David Rodriguez Rodriguez
