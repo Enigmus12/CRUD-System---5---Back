@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>CRUD Properties</title></head>
+<body>
+  <h1>Properties</h1>
+  <form id="propForm">
+    <input name="address" placeholder="Address" required />
+    <input name="price" type="number" step="0.01" placeholder="Price" required />
+    <input name="size" type="number" placeholder="Size" required />
+    <input name="description" placeholder="Description" />
+    <button type="submit">Create</button>
+  </form>
+
+  <ul id="list"></ul>
+
+  <script>
+    const API = '/api/properties';
+
+    async function fetchAll(){
+      const res = await fetch(API);
+      const data = await res.json();
+      const ul = document.getElementById('list');
+      ul.innerHTML = '';
+      data.forEach(p => {
+        const li = document.createElement('li');
+        li.textContent = `${p.address} - $${p.price} - ${p.size}m2`;
+        const del = document.createElement('button'); del.textContent='Delete';
+        del.onclick = async () => { await fetch(`${API}/${p.id}`, {method:'DELETE'}); fetchAll(); }
+        const edit = document.createElement('button'); edit.textContent='Edit';
+        edit.onclick = () => { /* abre formulario para editar - implementar */ }
+        li.append(edit, del);
+        ul.appendChild(li);
+      });
+    }
+    document.getElementById('propForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      const body = {
+        address: f.address.value,
+        price: parseFloat(f.price.value),
+        size: parseInt(f.size.value),
+        description: f.description.value
+      };
+      await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+      f.reset(); fetchAll();
+    };
+    fetchAll();
+  </script>
+</body>
+</html>

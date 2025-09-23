@@ -1,0 +1,5 @@
+eci\edu\co\service\PropertyService.class
+eci\edu\co\App.class
+eci\edu\co\model\Property.class
+eci\edu\co\repository\PropertyRepository.class
+eci\edu\co\controller\PropertyController.class
