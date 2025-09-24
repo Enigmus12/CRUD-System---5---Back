@@ -9,7 +9,7 @@ Data persistence is handled with **MySQL Server** deployed on another AWS EC2 in
 ## Sample workshop video
 In this video, we can see how the backend is deployed and how the REST APIs for create, read, update, and delete operations are tested. It also shows how this looks in the MySQL database, since we are managing them in different instances.
 
-You can watch the demo video here: [Workshop Video](./Workshop%20Video.mp4)
+You can watch the demo video here: [Workshop Video](./WorkShop%20VIdeo.mp4)
 
 
 
