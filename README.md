@@ -6,7 +6,13 @@ Data persistence is handled with **MySQL Server** deployed on another AWS EC2 in
 
 ---
 
-## 🚀 System Architecture
+## Sample workshop video
+In this video, we can see how the backend is deployed and how the REST APIs for create, read, update, and delete operations are tested. It also shows how this looks in the MySQL database, since we are managing them in different instances.
+
+[![Watch the video](https://img.icons8.com/ios-filled/100/000000/play-button-circled.png)](./Workshop%20Video.mp4)
+
+
+## System Architecture
 
 The solution consists of three main layers:
 
@@ -133,3 +139,7 @@ CREATE TABLE properties (
 ## Author
 
 Juan David Rodriguez Rodriguez
+
+## Extra Information
+
+There is a file named Informe.pdf, which is the workshop report.
